@@ -58,7 +58,7 @@ class _LoginState extends State<Login> {
               ),
               TextField(
                 controller: passwordController,
-                obscureText: false,
+                obscureText: true,
                 decoration: kInputDecoration.copyWith(
                   hintText: "Password",
                 ),
@@ -126,11 +126,25 @@ class _LoginState extends State<Login> {
   }
 
   void SignUserIn() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: userNameController.text, password: passwordController.text);
-    } catch (err) {
-      print(err.toString());
+    } on FirebaseAuthException catch (err) {
+      if (err.code == 'invalid-credential') {
+        print('User Name or Password is incorrect!');
+      } else {
+        print(err.toString());
+      }
     }
+
+    Navigator.pop(context);
   }
 }

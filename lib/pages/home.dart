@@ -8,6 +8,8 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
+final user = FirebaseAuth.instance.currentUser;
+
 void SignOut() {
   FirebaseAuth.instance.signOut();
 }
@@ -25,6 +27,13 @@ class _HomeState extends State<Home> {
           )
         ],
       ),
+      body: Center(
+          child: Text(
+        'Welcome ${user!.email!}',
+        style: const TextStyle(
+          fontSize: 17,
+        ),
+      )),
     );
   }
 }
